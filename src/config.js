@@ -4,6 +4,7 @@ class Config {
 
     static stageCols = 6;
     static stageRows = 12;
+
     static stageBackgroundColor = '#3a3a3a';
 
     static initialBoard = [
@@ -18,18 +19,17 @@ class Config {
         [0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0], 
+        [0, 0, 0, 0, 0, 0],
     ];
 
-
     static puyoColorMax = 5;
-    static fallingSpeed = 10;
+    static fallingSpeed = 600;
     static erasePuyoCount = 4;
     static eraseAnimationFrames = 30;
     static zenkeshiDuration = 800;
     static zenkeshiHoldFrames = 120;
     static zenkeshiFadeDuration = 300;
-    static playerFallingSpeed = 2.6;
+    static playerFallingSpeed = 156;
     static playerLockDelayFrames = 20;
-    static playerDownSpeed = 10;
+    static playerDownSpeed = 600;
 }

@@ -123,26 +123,28 @@ class Stage {
         }
         return (Stage.fallingPuyoInfoList.length > 0);
     }
-    static fallPuyo() {
+    static fallPuyo(dtSec) {
         let isFalling = false;
+
         for (const fallingPuyoInfo of Stage.fallingPuyoInfoList) {
-            if (!fallingPuyoInfo.falling) {
-                continue;
-            }
+            if (!fallingPuyoInfo.falling) continue;
+
             let position = fallingPuyoInfo.position;
-            position += Config.fallingSpeed;
+
+            position += Config.fallingSpeed * dtSec;
+
             if (position >= fallingPuyoInfo.destination) {
                 position = fallingPuyoInfo.destination;
                 fallingPuyoInfo.falling = false;
             } else {
                 isFalling = true;
             }
+
             fallingPuyoInfo.position = position;
-            fallingPuyoInfo.element.style.top = position + 'px';
+            fallingPuyoInfo.element.style.top = position + "px";
         }
         return isFalling;
     }
-
     static checkPuyoErase(startFrame) {
         Stage.erasingStartFrame = startFrame;
         Stage.erasingInfoList = [];

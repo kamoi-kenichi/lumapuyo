@@ -1,29 +1,48 @@
 window.addEventListener("load", () => {
   initialize();
-  gameLoop();
+  startLoop();
 });
 
 let gameState;
 let frame;
+let lastTimeMs = 0;
 
 let comboCount = 0;
 let zenkeshiStartFrame = 0;
 let zenkeshiHidden = false;
 
 function initialize() {
-
   GameImage.initialize();
-
   Stage.initialize();
-
   Player.initialize();
 
   gameState = "start";
-
   frame = 0;
 }
 
-function gameLoop() {
+function startLoop() {
+  lastTimeMs = performance.now();
+  requestAnimationFrame(loop);
+}
+
+function loop(nowMs) {
+  let deltaMs = nowMs - lastTimeMs;
+  lastTimeMs = nowMs;
+
+  if (deltaMs > 50) deltaMs = 50;
+
+  const dtSec = deltaMs / 1000;
+
+  frame += dtSec * 60;
+
+  const frameInt = Math.floor(frame);
+
+  gameStep(frameInt, dtSec);
+
+  requestAnimationFrame(loop);
+}
+
+function gameStep(frameInt, dtSec) {
   switch (gameState) {
     case "start":
       gameState = "checkFallingPuyo";
@@ -38,57 +57,58 @@ function gameLoop() {
       break;
 
     case "fallingPuyo":
-      if (!Stage.fallPuyo()) {
+      if (!Stage.fallPuyo(dtSec)) {
         gameState = "checkPuyoErase";
       }
       break;
 
-    case 'checkPuyoErase':
-      const eraseInfo = Stage.checkPuyoErase(frame);
+    case "checkPuyoErase": {
+      const eraseInfo = Stage.checkPuyoErase(frameInt);
       if (eraseInfo) {
-        gameState = 'erasingPuyo';
+        gameState = "erasingPuyo";
         comboCount++;
       } else {
         if (Stage.puyoCount === 0 && comboCount > 0) {
           Stage.dimBackground();
           Stage.showZenkeshi();
-
-          zenkeshiStartFrame = frame;
+          zenkeshiStartFrame = frameInt;
           zenkeshiHidden = false;
-          gameState = 'zenkeshi';
+          gameState = "zenkeshi";
           break;
         }
         comboCount = 0;
-        gameState = 'createPlayerPuyo';
+        gameState = "createPlayerPuyo";
+      }
+      break;
+    }
+
+    case "erasingPuyo":
+      if (!Stage.erasePuyo(frameInt)) {
+        gameState = "checkFallingPuyo";
       }
       break;
 
-    case 'erasingPuyo':
-      if (!Stage.erasePuyo(frame)) {
-        gameState = 'checkFallingPuyo';
-      }
-      break;
-
-    case 'createPlayerPuyo':
+    case "createPlayerPuyo":
       if (!Player.createPlayerPuyo()) {
-        gameState = 'gameOver';
+        gameState = "gameOver";
       } else {
-        gameState = 'playing';
+        gameState = "playing";
       }
       break;
 
-    case 'playing':
-      const nextAction = Player.update();
+    case "playing": {
+      const nextAction = Player.update(dtSec);
       gameState = nextAction;
       break;
+    }
 
-    case 'fix':
+    case "fix":
       Player.fixPlayerPuyo();
-      gameState = 'checkFallingPuyo';
+      gameState = "checkFallingPuyo";
       break;
 
-    case 'zenkeshi': {
-      const elapsed = frame - zenkeshiStartFrame;
+    case "zenkeshi": {
+      const elapsed = frameInt - zenkeshiStartFrame;
       const fadeFrames = Math.ceil(Config.zenkeshiFadeDuration / (1000 / 60));
 
       if (!zenkeshiHidden && elapsed >= Config.zenkeshiHoldFrames) {
@@ -100,11 +120,9 @@ function gameLoop() {
         comboCount = 0;
         zenkeshiHidden = false;
         Stage.undimBackground();
-        gameState = 'checkFallingPuyo';
+        gameState = "checkFallingPuyo";
       }
       break;
     }
   }
-  frame++;
-  setTimeout(gameLoop, 1000 / 60);
 }

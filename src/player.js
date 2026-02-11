@@ -83,6 +83,7 @@ class Player {
         Player.setPlayerPuyoPosition();
         return true;
     }
+    
     static setPlayerPuyoPosition() {
         Player.centerPuyoElement.style.left = Player.playerPuyoStatus.left + 'px';
         Player.centerPuyoElement.style.top = Player.playerPuyoStatus.top + 'px';
@@ -93,15 +94,15 @@ class Player {
         Player.rotatingPuyoElement.style.top = y + 'px';
     }
 
-    static dropPlayerPuyo(isPressingDown) {
+    static dropPlayerPuyo(isPressingDown, dtSec) {
         let { x, y, dx, dy } = Player.playerPuyoStatus;
 
         if (!Stage.getPuyoInfo(x, y + 1) && !Stage.getPuyoInfo(x + dx, y + dy + 1)) {
-            Player.playerPuyoStatus.top += Config.playerFallingSpeed;
+           
+            let fall = Config.playerFallingSpeed * dtSec;
+            if (isPressingDown) fall += Config.playerDownSpeed * dtSec;
 
-            if (isPressingDown) {
-                Player.playerPuyoStatus.top += Config.playerDownSpeed;
-            }
+            Player.playerPuyoStatus.top += fall;
 
             if (Math.floor(Player.playerPuyoStatus.top / Config.puyoImageHeight) != y) {
                 y += 1;
@@ -128,25 +129,12 @@ class Player {
             }
         }
     }
-    static update() {
-        if (Player.dropPlayerPuyo(Player.keyStatus.down)) {
+
+    static update(dtSec) {
+        if (Player.dropPlayerPuyo(Player.keyStatus.down, dtSec)) {
             return "fix";
         }
         Player.setPlayerPuyoPosition();
         return "playing";
     }
-    static fixPlayerPuyo() {
-        const { x, y, dx, dy } = Player.playerPuyoStatus;
-        if (y >= 0) {
-            Stage.createPuyo(x, y, Player.centerPuyoColor);
-        }
-        if (y + dy >= 0) {
-            Stage.createPuyo(x + dx, y + dy, Player.rotatingPuyoColor);
-        }
-        Player.centerPuyoElement.remove();
-        Player.centerPuyoElement = null;
-        Player.rotatingPuyoElement.remove();
-        Player.rotatingPuyoElement = null;
-    }
 }
-
