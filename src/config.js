@@ -32,4 +32,5 @@ class Config {
     static playerFallingSpeed = 156;
     static playerLockDelayFrames = 20;
     static playerDownSpeed = 600;
+    static playerMoveFrames = 10;
 }

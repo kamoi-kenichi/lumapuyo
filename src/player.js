@@ -6,6 +6,9 @@ class Player {
     static rotatingPuyoElement = null;
     static groundFrame = 0;
     static keyStatus = null;
+    static actionStartFrame = 0;
+    static moveSource = 0;
+    static moveDestination = 0;
 
     static initialize() {
         Player.keyStatus = {
@@ -121,7 +124,7 @@ class Player {
         while (y < targetY) {
 
             if (Stage.getPuyoInfo(x, y + 1) || Stage.getPuyoInfo(x + dx, y + dy + 1)) {
-                
+
                 Player.playerPuyoStatus.top = y * cellH;
                 Player.playerPuyoStatus.y = y;
 
@@ -146,6 +149,60 @@ class Player {
             return "fix";
         }
         Player.setPlayerPuyoPosition();
+        if (Player.keyStatus.right || Player.keyStatus.left) {
+            const mx = (Player.keyStatus.right) ? 1 : -1;
+
+            const cx = Player.playerPuyoStatus.x;   // ★ここ
+            const cy = Player.playerPuyoStatus.y;   // ★ここ
+            const rx = cx + Player.playerPuyoStatus.dx;
+            const ry = cy + Player.playerPuyoStatus.dy;
+
+            let canMove = true;
+
+            if (Stage.getPuyoInfo(cx + mx, cy)) canMove = false;
+            if (Stage.getPuyoInfo(rx + mx, ry)) canMove = false;
+
+            if (Player.groundFrame === 0) {
+                if (Stage.getPuyoInfo(cx + mx, cy + 1)) canMove = false;
+                if (Stage.getPuyoInfo(rx + mx, ry + 1)) canMove = false;
+            }
+
+            if (canMove) {
+                Player.actionStartFrame = frame;
+                Player.moveSource = cx * Config.puyoImageWidth;
+                Player.moveDestination = (cx + mx) * Config.puyoImageWidth;
+                Player.playerPuyoStatus.x += mx;
+                return 'moving';
+            }
+        }
+
         return "playing";
+    }
+
+    static movePlayerPuyo(dtSec) {
+        Player.dropPlayerPuyo(false, dtSec); 
+
+        let ratio = (frame - Player.actionStartFrame) / Config.playerMoveFrames;
+        if (ratio > 1) ratio = 1;
+
+        Player.playerPuyoStatus.left =
+            (Player.moveDestination - Player.moveSource) * ratio + Player.moveSource;
+
+        Player.setPlayerPuyoPosition();
+        return ratio === 1;
+    }
+
+    static fixPlayerPuyo() {
+        const { x, y, dx, dy } = Player.playerPuyoStatus;
+        if (y >= 0) {
+            Stage.createPuyo(x, y, Player.centerPuyoColor);
+        }
+        if (y + dy >= 0) {
+            Stage.createPuyo(x + dx, y + dy, Player.rotatingPuyoColor);
+        }
+        Player.centerPuyoElement.remove();
+        Player.centerPuyoElement = null;
+        Player.rotatingPuyoElement.remove();
+        Player.rotatingPuyoElement = null;
     }
 }

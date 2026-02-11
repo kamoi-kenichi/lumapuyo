@@ -107,6 +107,13 @@ function gameStep(frameInt, dtSec) {
       gameState = "checkFallingPuyo";
       break;
 
+    case 'moving':
+      if (Player.movePlayerPuyo(dtSec)) {
+        gameState = 'playing';
+      }
+      break;
+
+
     case "zenkeshi": {
       const elapsed = frameInt - zenkeshiStartFrame;
       const fadeFrames = Math.ceil(Config.zenkeshiFadeDuration / (1000 / 60));
