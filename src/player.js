@@ -83,7 +83,7 @@ class Player {
         Player.setPlayerPuyoPosition();
         return true;
     }
-    
+
     static setPlayerPuyoPosition() {
         Player.centerPuyoElement.style.left = Player.playerPuyoStatus.left + 'px';
         Player.centerPuyoElement.style.top = Player.playerPuyoStatus.top + 'px';
@@ -95,39 +95,50 @@ class Player {
     }
 
     static dropPlayerPuyo(isPressingDown, dtSec) {
+        const cellH = Config.puyoImageHeight;
+
         let { x, y, dx, dy } = Player.playerPuyoStatus;
 
-        if (!Stage.getPuyoInfo(x, y + 1) && !Stage.getPuyoInfo(x + dx, y + dy + 1)) {
-           
-            let fall = Config.playerFallingSpeed * dtSec;
-            if (isPressingDown) fall += Config.playerDownSpeed * dtSec;
+        const isBlockedBelow = () =>
+            Stage.getPuyoInfo(x, y + 1) || Stage.getPuyoInfo(x + dx, y + dy + 1);
 
-            Player.playerPuyoStatus.top += fall;
-
-            if (Math.floor(Player.playerPuyoStatus.top / Config.puyoImageHeight) != y) {
-                y += 1;
-                Player.playerPuyoStatus.y = y;
-                if (!Stage.getPuyoInfo(x, y + 1) && !Stage.getPuyoInfo(x + dx, y + dy + 1)) {
-                    Player.groundFrame = 0;
-                    return false;
-                }
-            } else {
-                Player.groundFrame = 0;
-                return false;
-            }
-        } else {
+        if (isBlockedBelow()) {
             if (Player.groundFrame === 0) {
                 Player.groundFrame = 1;
                 return false;
-            } else {
-                Player.groundFrame++;
-                if (Player.groundFrame > Config.playerLockDelayFrames) {
-                    return true;
-                } else {
-                    return false;
-                }
             }
+            Player.groundFrame++;
+            return Player.groundFrame > Config.playerLockDelayFrames;
         }
+
+        let fall = Config.playerFallingSpeed * dtSec;
+        if (isPressingDown) fall += Config.playerDownSpeed * dtSec;
+
+        Player.playerPuyoStatus.top += fall;
+
+        const targetY = Math.floor(Player.playerPuyoStatus.top / cellH);
+
+        while (y < targetY) {
+
+            if (Stage.getPuyoInfo(x, y + 1) || Stage.getPuyoInfo(x + dx, y + dy + 1)) {
+                
+                Player.playerPuyoStatus.top = y * cellH;
+                Player.playerPuyoStatus.y = y;
+
+                if (Player.groundFrame === 0) Player.groundFrame = 1;
+                else Player.groundFrame++;
+
+                return Player.groundFrame > Config.playerLockDelayFrames;
+            }
+
+            y += 1;
+            Player.playerPuyoStatus.y = y;
+
+            Player.groundFrame = 0;
+        }
+
+        Player.groundFrame = 0;
+        return false;
     }
 
     static update(dtSec) {
