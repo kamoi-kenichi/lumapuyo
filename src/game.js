@@ -113,6 +113,11 @@ function gameStep(frameInt, dtSec) {
       }
       break;
 
+    case 'rotating':
+      if (Player.rotatePlayerPuyo(dtSec)) {
+        gameState = 'playing';
+      }
+      break;
 
     case "zenkeshi": {
       const elapsed = frameInt - zenkeshiStartFrame;

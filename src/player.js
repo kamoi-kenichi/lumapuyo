@@ -9,6 +9,9 @@ class Player {
     static actionStartFrame = 0;
     static moveSource = 0;
     static moveDestination = 0;
+    static rotateBeforeLeft = 0;
+    static rotateAfterLeft = 0;
+    static rotateFromRotation = 0;
 
     static initialize() {
         Player.keyStatus = {
@@ -42,7 +45,7 @@ class Player {
                 case "ArrowLeft":
                     Player.keyStatus.left = false;
                     event.preventDefault();
-                    return;
+                    return 'rotating';
                 case "ArrowUp":
                     Player.keyStatus.up = false;
                     event.preventDefault();
@@ -174,13 +177,62 @@ class Player {
                 Player.playerPuyoStatus.x += mx;
                 return 'moving';
             }
-        }
+        } else if (Player.keyStatus.up) {
+            const x = Player.playerPuyoStatus.x;
+            const y = Player.playerPuyoStatus.y + (Player.groundFrame === 0 ? 1 : 0);
+            const rotation = Player.playerPuyoStatus.rotation;
+            let canRotate = true;
 
+            let cx = 0;
+            let cy = 0;
+            if (rotation === 0) {
+            } else if (rotation === 90) {
+                if (Stage.getPuyoInfo(x - 1, y)) {
+                    cx = 1;
+                    if (Stage.getPuyoInfo(x + 1, y)) {
+                        canRotate = false;
+                    }
+                }
+            } else if (rotation === 180) {
+                if (Stage.getPuyoInfo(x, y + 1)) {
+                    cy = -1;
+                }
+                if (Stage.getPuyoInfo(x - 1, y + 1)) {
+                    cy = -1;
+                }
+            } else if (rotation === 270) {
+                if (Stage.getPuyoInfo(x + 1, y)) {
+                    cx = -1;
+                    if (Stage.getPuyoInfo(x - 1, y)) {
+                        canRotate = false;
+                    }
+                }
+            }
+            if (canRotate) {
+                if (cy === -1) {
+                    if (Player.groundFrame > 0) {
+                        Player.playerPuyoStatus.y -= 1;
+                        Player.groundFrame = 0;
+                    }
+                    Player.playerPuyoStatus.top = Player.playerPuyoStatus.y * Config.puyoImageHeight;
+                }
+            }
+            Player.actionStartFrame = frame;
+            Player.rotateBeforeLeft = x * Config.puyoImageWidth;
+            Player.rotateAfterLeft = (x + cx) * Config.puyoImageWidth;
+            Player.rotateFromRotation = Player.playerPuyoStatus.rotation;
+            Player.playerPuyoStatus.x += cx;
+            const nextRotation = (Player.playerPuyoStatus.rotation + 90) % 360;
+            const dCombi = [[1, 0], [0, -1], [-1, 0], [0, 1]][nextRotation / 90];
+            Player.playerPuyoStatus.dx = dCombi[0];
+            Player.playerPuyoStatus.dy = dCombi[1];
+            return 'rotating';
+        }
         return "playing";
     }
 
     static movePlayerPuyo(dtSec) {
-        Player.dropPlayerPuyo(false, dtSec); 
+        Player.dropPlayerPuyo(false, dtSec);
 
         let ratio = (frame - Player.actionStartFrame) / Config.playerMoveFrames;
         if (ratio > 1) ratio = 1;
@@ -190,6 +242,21 @@ class Player {
 
         Player.setPlayerPuyoPosition();
         return ratio === 1;
+    }
+
+    static rotatePlayerPuyo(dtSec) {
+        Player.dropPlayerPuyo(false, dtSec);
+        let ratio = (frame - Player.actionStartFrame) / Config.playerRotateFrames;
+        if (ratio > 1) {
+            ratio = 1;
+        }
+        Player.playerPuyoStatus.left = (Player.rotateAfterLeft - Player.rotateBeforeLeft) * ratio + Player.rotateBeforeLeft;
+        Player.playerPuyoStatus.rotation = (Player.rotateFromRotation + ratio * 90) % 360;
+        Player.setPlayerPuyoPosition();
+        if (ratio === 1) {
+            return true;
+        }
+        return false;
     }
 
     static fixPlayerPuyo() {

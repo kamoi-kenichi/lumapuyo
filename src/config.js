@@ -33,4 +33,5 @@ class Config {
     static playerLockDelayFrames = 20;
     static playerDownSpeed = 600;
     static playerMoveFrames = 10;
+    static playerRotateFrames = 10;
 }
