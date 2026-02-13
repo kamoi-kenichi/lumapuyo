@@ -193,7 +193,11 @@ class Player {
                 [0, 0],
                 [1, 0],
                 [-1, 0],
+                [0, -1],
+                [1, -1],
+                [-1, -1],
             ];
+
 
             let canRotate = false;
             let kickX = 0;
@@ -231,6 +235,8 @@ class Player {
 
                 Player.playerPuyoStatus.x += kickX;
                 Player.playerPuyoStatus.y += kickY;
+
+                Player.playerPuyoStatus.top = Player.playerPuyoStatus.y * Config.puyoImageHeight;
 
                 Player.playerPuyoStatus.dx = ndx;
                 Player.playerPuyoStatus.dy = ndy;
