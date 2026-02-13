@@ -173,9 +173,16 @@ class Player {
 
             if (canMove) {
                 Player.actionStartFrame = frame;
+
+                Player.playerPuyoStatus.left = Player.playerPuyoStatus.x * Config.puyoImageWidth;
+                Player.playerPuyoStatus.top = Player.playerPuyoStatus.y * Config.puyoImageHeight;
+
                 Player.moveSource = cx * Config.puyoImageWidth;
                 Player.moveDestination = (cx + mx) * Config.puyoImageWidth;
                 Player.playerPuyoStatus.x += mx;
+
+                Player.groundFrame = 0;
+
                 return 'moving';
             }
         } else if (Player.keyStatus.up) {
@@ -225,6 +232,9 @@ class Player {
 
                 Player.actionStartFrame = frame;
 
+                Player.playerPuyoStatus.left = Player.playerPuyoStatus.x * Config.puyoImageWidth;
+                Player.playerPuyoStatus.top = Player.playerPuyoStatus.y * Config.puyoImageHeight;
+
                 Player.rotateBeforeLeft =
                     Player.playerPuyoStatus.x * Config.puyoImageWidth;
 
@@ -238,6 +248,8 @@ class Player {
 
                 Player.playerPuyoStatus.top = Player.playerPuyoStatus.y * Config.puyoImageHeight;
 
+                Player.groundFrame = 0;
+
                 Player.playerPuyoStatus.dx = ndx;
                 Player.playerPuyoStatus.dy = ndy;
 
@@ -248,8 +260,6 @@ class Player {
     }
 
     static movePlayerPuyo(dtSec) {
-        Player.dropPlayerPuyo(false, dtSec);
-
         let ratio = (frame - Player.actionStartFrame) / Config.playerMoveFrames;
         if (ratio > 1) ratio = 1;
 
@@ -261,23 +271,23 @@ class Player {
     }
 
     static rotatePlayerPuyo(dtSec) {
-
-        Player.dropPlayerPuyo(false, dtSec);
-
         let ratio = (frame - Player.actionStartFrame) / Config.playerRotateFrames;
         if (ratio > 1) ratio = 1;
 
         Player.playerPuyoStatus.left =
-            (Player.rotateAfterLeft - Player.rotateBeforeLeft) * ratio
-            + Player.rotateBeforeLeft;
+            (Player.rotateAfterLeft - Player.rotateBeforeLeft) * ratio + Player.rotateBeforeLeft;
 
         Player.playerPuyoStatus.rotation =
             (Player.rotateFromRotation + ratio * 90) % 360;
 
         Player.setPlayerPuyoPosition();
-
-        return ratio === 1;
+        if (ratio === 1) {
+        Player.playerPuyoStatus.rotation =
+            (Player.rotateFromRotation + 90) % 360; 
+        return true;
     }
+    return false;
+}
 
     static fixPlayerPuyo() {
         const { x, y, dx, dy } = Player.playerPuyoStatus;
