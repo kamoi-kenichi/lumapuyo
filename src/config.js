@@ -34,4 +34,5 @@ class Config {
     static playerDownSpeed = 600;
     static playerMoveFrames = 10;
     static playerRotateFrames = 10;
+    static batankyuAnimationFrames = 1000;
 }

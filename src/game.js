@@ -136,5 +136,14 @@ function gameStep(frameInt, dtSec) {
       }
       break;
     }
+
+    case 'gameOver':
+      GameImage.prepareBatankyuAnimation();
+      gameState = 'batankyu';
+      break;
+
+    case 'batankyu':
+      GameImage.updateBatankyu();
+      break;
   }
 }
