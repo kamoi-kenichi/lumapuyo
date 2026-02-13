@@ -35,4 +35,7 @@ class Config {
     static playerMoveFrames = 10;
     static playerRotateFrames = 10;
     static batankyuAnimationFrames = 1000;
+    static gameOverFadeFrames = 45;      
+    static batankyuIntroFrames = 60;     
+    static batankyuShakeFrames = 180;    
 }

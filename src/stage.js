@@ -9,8 +9,12 @@ class Stage {
     static dimOverlay = null;
 
     static initialize() {
-
         Stage.stageElement = document.getElementById("stage");
+        Stage.stageElement.innerHTML = "";
+
+        GameImage.overlayEl = null;
+        GameImage.promptEl = null;
+
         Stage.stageElement.style.width = Config.puyoImageWidth * Config.stageCols + 'px';
         Stage.stageElement.style.height = Config.puyoImageHeight * Config.stageRows + 'px';
         Stage.stageElement.style.backgroundColor = Config.stageBackgroundColor;
@@ -33,18 +37,21 @@ class Stage {
 
         Stage.stageElement.appendChild(Stage.dimOverlay);
 
+        const zenkeshiTpl = document.getElementById("zenkeshi"); 
+        Stage.zenkeshiImage = zenkeshiTpl.cloneNode(true);
+        Stage.zenkeshiImage.removeAttribute("id"); 
 
-        Stage.zenkeshiImage = document.getElementById("zenkeshi");
         Stage.zenkeshiImage.width = Config.puyoImageWidth * Config.stageCols;
-        Stage.zenkeshiImage.style.position = 'absolute';
-        Stage.zenkeshiImage.style.opacity = '0';
-        Stage.stageElement.appendChild(Stage.zenkeshiImage);
-
+        Stage.zenkeshiImage.style.position = "absolute";
+        Stage.zenkeshiImage.style.opacity = "0";
         Stage.zenkeshiImage.style.zIndex = "10";
         Stage.zenkeshiImage.style.pointerEvents = "none";
 
+        Stage.stageElement.appendChild(Stage.zenkeshiImage);
+
         Stage.puyoCount = 0;
         Stage.puyoBoard = [];
+
         for (let y = 0; y < Config.stageRows; y++) {
             Stage.puyoBoard[y] = [];
             for (let x = 0; x < Config.stageCols; x++) {
@@ -96,6 +103,7 @@ class Stage {
     static removePuyoInfo(x, y) {
         Stage.puyoBoard[y][x] = null;
     }
+
     static checkFallingPuyo() {
         Stage.fallingPuyoInfoList = [];
         for (let y = Config.stageRows - 2; y >= 0; y--) {
@@ -123,6 +131,7 @@ class Stage {
         }
         return (Stage.fallingPuyoInfoList.length > 0);
     }
+
     static fallPuyo(dtSec) {
         let isFalling = false;
 
@@ -145,6 +154,7 @@ class Stage {
         }
         return isFalling;
     }
+
     static checkPuyoErase(startFrame) {
         Stage.erasingStartFrame = startFrame;
         Stage.erasingInfoList = [];
@@ -181,6 +191,8 @@ class Stage {
         for (let y = 0; y < Config.stageRows; y++) {
             for (let x = 0; x < Config.stageCols; x++) {
                 const puyoInfo = Stage.getPuyoInfo(x, y);
+                if (!puyoInfo) continue;
+
                 const connectedInfoList = checkConnectedPuyo(x, y);
 
                 if (connectedInfoList.length < Config.erasePuyoCount) {
@@ -247,6 +259,7 @@ class Stage {
             return true;
         }
     }
+
     static showZenkeshi() {
         Stage.zenkeshiImage.style.left = "0px";
         Stage.zenkeshiImage.style.transformOrigin = "center center";
@@ -263,15 +276,18 @@ class Stage {
         Stage.zenkeshiImage.style.top = (Config.puyoImageHeight * Config.stageRows) / 3 + "px";
         Stage.zenkeshiImage.style.transform = "scale(1.05)";
     }
+
     static hideZenkeshi() {
         Stage.zenkeshiImage.style.transition = `opacity ${Config.zenkeshiFadeDuration}ms cubic-bezier(0.22, 1, 0.36, 1)`;
         Stage.zenkeshiImage.style.opacity = '0';
         Stage.zenkeshiImage.style.transform = "scale(1)";
     }
+
     static dimBackground() {
         Stage.dimOverlay.style.transition = "opacity 200ms cubic-bezier(0.22, 1, 0.36, 1)";
         Stage.dimOverlay.style.opacity = "1";
     }
+
     static undimBackground() {
         Stage.dimOverlay.style.transition = "opacity 300ms cubic-bezier(0.22, 1, 0.36, 1)";
         Stage.dimOverlay.style.opacity = "0";

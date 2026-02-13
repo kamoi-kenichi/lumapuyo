@@ -50,6 +50,30 @@
         #stage img {
             filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
         }
+
+        #stage .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            opacity: 0;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        #stage .prompt {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 18px;
+            text-align: center;
+            font: 700 18px/1.2 system-ui, "Noto Sans JP";
+            letter-spacing: .08em;
+            color: rgba(255, 255, 255, 0.92);
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+            opacity: 0;
+            z-index: 60;
+            pointer-events: none;
+        }
     </style>
 </head>
 

@@ -6,7 +6,6 @@ window.addEventListener("load", () => {
 let gameState;
 let frame;
 let lastTimeMs = 0;
-
 let comboCount = 0;
 let zenkeshiStartFrame = 0;
 let zenkeshiHidden = false;
@@ -15,7 +14,6 @@ function initialize() {
   GameImage.initialize();
   Stage.initialize();
   Player.initialize();
-
   gameState = "start";
   frame = 0;
 }
@@ -30,20 +28,17 @@ function loop(nowMs) {
   lastTimeMs = nowMs;
 
   if (deltaMs > 50) deltaMs = 50;
-
   const dtSec = deltaMs / 1000;
-
   frame += dtSec * 60;
-
   const frameInt = Math.floor(frame);
-
   gameStep(frameInt, dtSec);
-
   requestAnimationFrame(loop);
 }
 
 function gameStep(frameInt, dtSec) {
+
   switch (gameState) {
+
     case "start":
       gameState = "checkFallingPuyo";
       break;
@@ -137,13 +132,37 @@ function gameStep(frameInt, dtSec) {
       break;
     }
 
-    case 'gameOver':
-      GameImage.prepareBatankyuAnimation();
-      gameState = 'batankyu';
+    case "gameOver":
+      GameImage.prepareGameOverEffects();
+      gameState = "gameOverFade";
       break;
 
-    case 'batankyu':
-      GameImage.updateBatankyu();
+    case "gameOverFade":
+      if (GameImage.updateGameOverFade()) {
+        GameImage.prepareBatankyu();
+        gameState = "batankyuIntro";
+      }
+      break;
+
+    case "batankyuIntro":
+      if (GameImage.updateBatankyuIntro()) {
+        GameImage.phaseStartFrame = frame; 
+        gameState = "batankyuShake";
+      }
+      break;
+
+    case "batankyuShake":
+      if (GameImage.updateBatankyuShake()) {
+        GameImage.showRetryPrompt();
+        gameState = "retryPrompt";
+      }
+      break;
+
+    case "retryPrompt":
+      GameImage.updateRetryPromptBlink();
+      if (Player.isRetryPressed()) {
+        initialize();
+      }
       break;
   }
 }
