@@ -85,7 +85,8 @@ class Player {
 
         const pair = Player.nextQueue.shift();
         Player.nextQueue.push(Player.randomPair());
-        GameImage.setNext(Player.nextQueue);
+
+        GameImage.animateNext(Player.nextQueue);
 
         Player.centerPuyoColor = pair.a;
         Player.rotatingPuyoColor = pair.b;

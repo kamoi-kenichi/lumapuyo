@@ -259,4 +259,35 @@ class GameImage {
             }
         }
     }
+    static animateNext(nextQueue) {
+
+        GameImage.prepareNextUI();
+
+        const boxes = GameImage.nextBoxes;
+        const container = GameImage.nextEl;
+
+        container.classList.add("animating");
+
+        boxes[1].topImg.parentElement.style.transform = "translateY(-98px)";
+
+        boxes[0].topImg.parentElement.style.transform = "translateY(-98px)";
+        boxes[0].topImg.parentElement.style.opacity = "0";
+
+        setTimeout(() => {
+
+            boxes.forEach(b => {
+                const el = b.topImg.parentElement;
+                el.style.transition = "none";
+                el.style.transform = "translateY(0)";
+                el.style.opacity = "1";
+                void el.offsetWidth;
+                el.style.transition = "";
+            });
+
+            GameImage.setNext(nextQueue);
+
+            container.classList.remove("animating");
+
+        }, 180);
+    }
 }
