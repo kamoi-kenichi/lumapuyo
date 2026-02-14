@@ -10,6 +10,47 @@ class GameImage {
     static scoreDigits = [];
     static scoreValue = 0;
 
+    static nextEl = null;
+    static nextBoxes = [];
+
+    static prepareNextUI() {
+        if (GameImage.nextEl) return;
+
+        const host = document.getElementById("next");
+        host.innerHTML = "";
+
+        const title = document.createElement("div");
+        title.className = "title";
+        title.textContent = "NEXT";
+        host.appendChild(title);
+
+        GameImage.nextEl = host;
+        GameImage.nextBoxes = [];
+
+        for (let i = 0; i < 2; i++) {
+            const box = document.createElement("div");
+            box.className = "box";
+            host.appendChild(box);
+
+            const topImg = document.createElement("img");
+            topImg.className = "puyo";
+            topImg.style.top = "6px";
+            topImg.width = Config.puyoImageWidth;
+            topImg.height = Config.puyoImageHeight;
+
+            const bottomImg = document.createElement("img");
+            bottomImg.className = "puyo";
+            bottomImg.style.top = (6 + Config.puyoImageHeight) + "px";
+            bottomImg.width = Config.puyoImageWidth;
+            bottomImg.height = Config.puyoImageHeight;
+
+            box.appendChild(topImg);
+            box.appendChild(bottomImg);
+
+            GameImage.nextBoxes.push({ topImg, bottomImg });
+        }
+    }
+
     static initialize() {
 
         if (GameImage.puyoImageList && GameImage.puyoImageList.length) return;
@@ -190,5 +231,32 @@ class GameImage {
 
         Stage.stageElement.appendChild(el);
         el.addEventListener("animationend", () => el.remove(), { once: true });
+    }
+
+    static setNext(nextQueue) {
+        GameImage.prepareNextUI();
+
+        for (let i = 0; i < GameImage.nextBoxes.length; i++) {
+            const pair = nextQueue[i];
+            const { topImg, bottomImg } = GameImage.nextBoxes[i];
+
+            if (!pair) {
+                topImg.style.visibility = "hidden";
+                bottomImg.style.visibility = "hidden";
+                continue;
+            }
+
+            topImg.style.visibility = "visible";
+            bottomImg.style.visibility = "visible";
+
+            topImg.src = `img/puyo_${pair.a}.png`;
+            bottomImg.src = `img/puyo_${pair.b}.png`;
+
+            for (const box of GameImage.nextEl.querySelectorAll(".box")) {
+                box.classList.remove("pop");
+                void box.offsetWidth;
+                box.classList.add("pop");
+            }
+        }
     }
 }

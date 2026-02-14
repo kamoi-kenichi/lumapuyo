@@ -16,12 +16,27 @@ class Player {
     static listenersInstalled = false;
     static rotateDir = 1;
 
+    static nextQueue = [];
+
+    static randomPair() {
+        return {
+            a: Math.trunc(Math.random() * Config.puyoColorMax) + 1,
+            b: Math.trunc(Math.random() * Config.puyoColorMax) + 1,
+        };
+    }
+
     static initialize() {
         Player.retryPressed = false;
         Player.keyStatus = {
             right: false, left: false, up: false, down: false,
             rotateCW: false, rotateCCW: false,
         };
+
+        Player.nextQueue = [];
+        for (let i = 0; i < 2; i++) {
+            Player.nextQueue.push(Player.randomPair());
+        }
+        GameImage.setNext(Player.nextQueue);
 
         if (Player.listenersInstalled) return;
         Player.listenersInstalled = true;
@@ -51,6 +66,12 @@ class Player {
                 case "Z": Player.keyStatus.rotateCCW = false; event.preventDefault(); return;
             }
         });
+
+        Player.nextQueue = [];
+        for (let i = 0; i < 2; i++) {
+            Player.nextQueue.push(Player.randomPair());
+        }
+        GameImage.setNext(Player.nextQueue);
     }
 
     static createPlayerPuyo() {
@@ -58,8 +79,16 @@ class Player {
             return false;
         }
 
-        Player.centerPuyoColor = Math.trunc(Math.random() * Config.puyoColorMax) + 1;
-        Player.rotatingPuyoColor = Math.trunc(Math.random() * Config.puyoColorMax) + 1;
+        if (Player.nextQueue.length < 2) {
+            while (Player.nextQueue.length < 2) Player.nextQueue.push(Player.randomPair());
+        }
+
+        const pair = Player.nextQueue.shift();
+        Player.nextQueue.push(Player.randomPair());
+        GameImage.setNext(Player.nextQueue);
+
+        Player.centerPuyoColor = pair.a;
+        Player.rotatingPuyoColor = pair.b;
 
         Player.centerPuyoElement = GameImage.getPuyoImage(Player.centerPuyoColor);
         Player.rotatingPuyoElement = GameImage.getPuyoImage(Player.rotatingPuyoColor);

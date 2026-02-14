@@ -191,6 +191,7 @@ function gameStep(frameInt, dtSec) {
     }
 
     case "gameOver":
+      Stage.undimBackground();
       GameImage.prepareGameOverEffects();
       gameState = "gameOverFade";
       break;
