@@ -52,6 +52,42 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 10px 22px rgba(0, 0, 0, .08);
+    animation:
+        floatLogo 4.2s ease-in-out infinite,
+        shadowBreath 4.2s ease-in-out infinite;
+    animation-delay: 1.2s;
+    animation-fill-mode: both;
+    will-change: transform;
+}
+
+@keyframes floatLogo {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes shadowBreath {
+
+    0%,
+    100% {
+        text-shadow: 0 10px 22px rgba(0, 0, 0, .08);
+    }
+
+    50% {
+        text-shadow: 0 14px 26px rgba(0, 0, 0, .12);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo span {
+        animation: none;
+    }
 }
 
 .logo::after {
