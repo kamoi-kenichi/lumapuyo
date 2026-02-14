@@ -219,6 +219,12 @@ function gameStep(frameInt, dtSec) {
 
     case "retryPrompt":
       GameImage.updateRetryPromptBlink();
+
+      if (Player.isTitlePressed()) {
+        window.location.href = "top.html";
+        break;
+      }
+
       if (Player.isRetryPressed()) {
         initialize();
       }

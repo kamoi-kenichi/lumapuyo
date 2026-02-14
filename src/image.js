@@ -146,7 +146,7 @@ class GameImage {
         if (!GameImage.promptEl) {
             const el = document.createElement("div");
             el.className = "prompt";
-            el.textContent = "Press R to Retry";
+            el.textContent = "Press R to Retry / T to Title";
             Stage.stageElement.appendChild(el);
             GameImage.promptEl = el;
         }
@@ -233,7 +233,7 @@ class GameImage {
         el.addEventListener("animationend", () => el.remove(), { once: true });
     }
 
-    static setNext(nextQueue) {
+    static setNext(nextQueue, { pop = true } = {}) {
         GameImage.prepareNextUI();
 
         for (let i = 0; i < GameImage.nextBoxes.length; i++) {
@@ -248,46 +248,73 @@ class GameImage {
 
             topImg.style.visibility = "visible";
             bottomImg.style.visibility = "visible";
-
             topImg.src = `img/puyo_${pair.a}.png`;
             bottomImg.src = `img/puyo_${pair.b}.png`;
+        }
 
-            for (const box of GameImage.nextEl.querySelectorAll(".box")) {
-                box.classList.remove("pop");
-                void box.offsetWidth;
-                box.classList.add("pop");
-            }
+        if (!pop) return;
+
+        for (const box of GameImage.nextEl.querySelectorAll(".box")) {
+            box.classList.remove("pop");
+            void box.offsetWidth;
+            box.classList.add("pop");
         }
     }
-    static animateNext(nextQueue) {
 
+    static animateNext(nextQueue) {
         GameImage.prepareNextUI();
 
-        const boxes = GameImage.nextBoxes;
         const container = GameImage.nextEl;
+        const boxEls = Array.from(container.querySelectorAll(".box"));
+        const box0 = boxEls[0];
+        const box1 = boxEls[1];
+
+        const h = box0.getBoundingClientRect().height;
+        const mb = parseFloat(getComputedStyle(box0).marginBottom) || 0;
+        const shift = h + mb;
 
         container.classList.add("animating");
 
-        boxes[1].topImg.parentElement.style.transform = "translateY(-98px)";
+        for (const b of boxEls) {
+            b.style.transition = "none";
+            b.style.transform = "translateY(0)";
+            b.style.opacity = "1";
+        }
+        void container.offsetWidth;
+        for (const b of boxEls) b.style.transition = "";
 
-        boxes[0].topImg.parentElement.style.transform = "translateY(-98px)";
-        boxes[0].topImg.parentElement.style.opacity = "0";
+        requestAnimationFrame(() => {
+            box1.style.transform = `translateY(${-shift}px)`;
+            box0.style.transform = `translateY(${-shift}px)`;
+            box0.style.opacity = "0";
+        });
 
         setTimeout(() => {
+            for (const b of boxEls) {
+                b.style.transition = "none";
+                b.style.transform = "translateY(0)";
+                b.style.opacity = "1";
+            }
+            void container.offsetWidth;
+            for (const b of boxEls) b.style.transition = "";
 
-            boxes.forEach(b => {
-                const el = b.topImg.parentElement;
-                el.style.transition = "none";
-                el.style.transform = "translateY(0)";
-                el.style.opacity = "1";
-                void el.offsetWidth;
-                el.style.transition = "";
+            GameImage.setNext(nextQueue, { pop: false });
+
+            box1.style.transition = "none";
+            box1.style.transform = `translateY(${shift}px)`;
+            box1.style.opacity = "0";
+            void box1.offsetWidth;
+            box1.style.transition = "";
+
+            requestAnimationFrame(() => {
+                box1.style.transform = "translateY(0)";
+                box1.style.opacity = "1";
             });
 
-            GameImage.setNext(nextQueue);
+            setTimeout(() => {
+                container.classList.remove("animating");
+            }, 190);
 
-            container.classList.remove("animating");
-
-        }, 180);
+        }, 190);
     }
 }

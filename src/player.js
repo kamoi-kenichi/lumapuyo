@@ -15,6 +15,7 @@ class Player {
     static retryPressed = false;
     static listenersInstalled = false;
     static rotateDir = 1;
+    static titlePressed = false;
 
     static nextQueue = [];
 
@@ -27,6 +28,7 @@ class Player {
 
     static initialize() {
         Player.retryPressed = false;
+        Player.titlePressed = false;
         Player.keyStatus = {
             right: false, left: false, up: false, down: false,
             rotateCW: false, rotateCCW: false,
@@ -44,7 +46,17 @@ class Player {
         document.addEventListener('keydown', (event) => {
             if (event.repeat) return;
 
-            if (event.key === "r" || event.key === "R") { Player.retryPressed = true; event.preventDefault(); return; }
+            if (event.key === "r" || event.key === "R") {
+                Player.retryPressed = true;
+                event.preventDefault();
+                return;
+            }
+
+            if (event.key === "t" || event.key === "T") {
+                Player.titlePressed = true;
+                event.preventDefault();
+                return;
+            }
 
             switch (event.key) {
                 case "ArrowLeft": Player.keyStatus.left = true; event.preventDefault(); return;
@@ -116,6 +128,12 @@ class Player {
     static isRetryPressed() {
         const v = Player.retryPressed;
         Player.retryPressed = false;
+        return v;
+    }
+
+    static isTitlePressed() {
+        const v = Player.titlePressed;
+        Player.titlePressed = false;
         return v;
     }
 
