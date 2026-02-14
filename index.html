@@ -45,6 +45,10 @@
             background-position: center;
             background-size: contain;
             background-color: #faf8f4;
+            border-radius: 20px;
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
         }
 
         #stage img.puyo {
@@ -62,13 +66,6 @@
             pointer-events: none;
             z-index: 1;
             backdrop-filter: blur(1px);
-        }
-
-        #stage {
-            border-radius: 20px;
-            box-shadow:
-                0 10px 25px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
         }
 
         #stage img {
@@ -116,6 +113,24 @@
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .35));
         }
 
+        .score.pop {
+            animation: scorePop .15s ease;
+        }
+
+        @keyframes scorePop {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.25);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
         #score {
             width: 100%;
             display: flex;
@@ -128,24 +143,12 @@
             display: flex;
             gap: 2px;
         }
-
     </style>
 </head>
 
-<body style="margin: 0;">
-
+<body>
     <div class="gameFrame">
-        <div id="stage" style="
-        position:relative;
-        margin:0 auto;
-        overflow:hidden;
-        background-image:url(img/bg.png);
-        background-repeat:no-repeat;
-        background-position:center;
-        background-size:contain;
-        background-color:#faf8f4;">
-        </div>
-
+        <div id="stage"></div>
         <div id="score"></div>
     </div>
 

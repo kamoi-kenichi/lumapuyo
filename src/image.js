@@ -133,7 +133,7 @@ class GameImage {
     static prepareScoreUI() {
         if (GameImage.scoreEl) return;
 
-        const host = document.getElementById("score"); 
+        const host = document.getElementById("score");
         host.innerHTML = "";
 
         const el = document.createElement("div");
@@ -152,8 +152,18 @@ class GameImage {
         }
     }
 
+    static popScore() {
+        if (!GameImage.scoreEl) return;
+
+        GameImage.scoreEl.classList.remove("pop");
+        void GameImage.scoreEl.offsetWidth;
+        GameImage.scoreEl.classList.add("pop");
+    }
 
     static setScore(v) {
+        const next = Math.max(0, Math.floor(v));
+        const changed = next !== GameImage.scoreValue;
+
         GameImage.scoreValue = Math.max(0, Math.floor(v));
         GameImage.prepareScoreUI();
 
@@ -161,5 +171,7 @@ class GameImage {
         for (let i = 0; i < 8; i++) {
             GameImage.scoreDigits[i].src = `img/${s[i]}.png`;
         }
+        
+        if (changed) GameImage.popScore();
     }
 }
