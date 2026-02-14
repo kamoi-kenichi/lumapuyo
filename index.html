@@ -12,6 +12,30 @@
     <script src="src/game.js"></script>
 
     <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 24px;
+            background: #fff;
+        }
+
+        .gameFrame {
+            width: fit-content;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 18px 14px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, .85);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, .15);
+            backdrop-filter: blur(6px);
+        }
+
         #stage {
             position: relative;
             margin: 0 auto;
@@ -23,7 +47,7 @@
             background-color: #faf8f4;
         }
 
-        #stage img {
+        #stage img.puyo {
             position: absolute;
             z-index: 2;
         }
@@ -56,7 +80,7 @@
             inset: 0;
             background: rgba(0, 0, 0, 0.55);
             opacity: 0;
-            z-index: 50;
+            z-index: 100;
             pointer-events: none;
         }
 
@@ -71,22 +95,58 @@
             color: rgba(255, 255, 255, 0.92);
             text-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
             opacity: 0;
-            z-index: 60;
+            z-index: 110;
             pointer-events: none;
         }
+
+        .score {
+            position: relative;
+            width: fit-content;
+            display: flex;
+            gap: 2px;
+            justify-content: center;
+        }
+
+        .scoreDigit {
+            width: 22px;
+            height: auto;
+            position: static;
+            z-index: 30;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .35));
+        }
+
+        #score {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        #score .score {
+            display: flex;
+            gap: 2px;
+        }
+
     </style>
 </head>
 
 <body style="margin: 0;">
-    <div id="stage" style="
-    position:relative;
-    margin:0 auto;
-    overflow:hidden;
-    background-image:url(img/bg.png);
-    background-repeat:no-repeat;
-    background-position:center;
-    background-size:contain;
-    background-color:#faf8f4;">
+
+    <div class="gameFrame">
+        <div id="stage" style="
+        position:relative;
+        margin:0 auto;
+        overflow:hidden;
+        background-image:url(img/bg.png);
+        background-repeat:no-repeat;
+        background-position:center;
+        background-size:contain;
+        background-color:#faf8f4;">
+        </div>
+
+        <div id="score"></div>
     </div>
 
     <div style="display: none">

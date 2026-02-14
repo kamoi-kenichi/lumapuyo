@@ -15,6 +15,9 @@ class Stage {
         GameImage.overlayEl = null;
         GameImage.promptEl = null;
 
+        GameImage.scoreEl = null;
+        GameImage.scoreDigits = [];
+
         Stage.stageElement.style.width = Config.puyoImageWidth * Config.stageCols + 'px';
         Stage.stageElement.style.height = Config.puyoImageHeight * Config.stageRows + 'px';
         Stage.stageElement.style.backgroundColor = Config.stageBackgroundColor;
@@ -37,9 +40,9 @@ class Stage {
 
         Stage.stageElement.appendChild(Stage.dimOverlay);
 
-        const zenkeshiTpl = document.getElementById("zenkeshi"); 
+        const zenkeshiTpl = document.getElementById("zenkeshi");
         Stage.zenkeshiImage = zenkeshiTpl.cloneNode(true);
-        Stage.zenkeshiImage.removeAttribute("id"); 
+        Stage.zenkeshiImage.removeAttribute("id");
 
         Stage.zenkeshiImage.width = Config.puyoImageWidth * Config.stageCols;
         Stage.zenkeshiImage.style.position = "absolute";
@@ -160,29 +163,32 @@ class Stage {
         Stage.erasingInfoList = [];
 
         const erasePuyoColorBin = {};
+        let connectBonusSum = 0;
+
+        const connectBonusTable = (n) => {
+            if (n <= 4) return 0;
+            if (n === 5) return 2;
+            if (n === 6) return 3;
+            if (n === 7) return 4;
+            if (n === 8) return 5;
+            if (n === 9) return 6;
+            if (n === 10) return 7;
+            return 10;
+        };
 
         const checkConnectedPuyo = (x, y, connectedInfoList = []) => {
             const originalPuyoInfo = Stage.getPuyoInfo(x, y);
-            if (!originalPuyoInfo) {
-                return connectedInfoList;
-            }
+            if (!originalPuyoInfo) return connectedInfoList;
 
-            connectedInfoList.push({
-                x: x,
-                y: y,
-                puyoInfo: originalPuyoInfo
-            });
+            connectedInfoList.push({ x, y, puyoInfo: originalPuyoInfo });
             Stage.removePuyoInfo(x, y);
 
-            const directionList = [[0, 1], [1, 0], [0, -1], [-1, 0]];
-            for (const direction of directionList) {
-                const dx = x + direction[0];
-                const dy = y + direction[1];
-                const puyoInfo = Stage.getPuyoInfo(dx, dy);
-                if (!puyoInfo || puyoInfo.puyoColor !== originalPuyoInfo.puyoColor) {
-                    continue;
-                }
-                checkConnectedPuyo(dx, dy, connectedInfoList);
+            const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+            for (const [dx, dy] of dirs) {
+                const nx = x + dx, ny = y + dy;
+                const p = Stage.getPuyoInfo(nx, ny);
+                if (!p || p.puyoColor !== originalPuyoInfo.puyoColor) continue;
+                checkConnectedPuyo(nx, ny, connectedInfoList);
             }
             return connectedInfoList;
         };
@@ -196,21 +202,17 @@ class Stage {
                 const connectedInfoList = checkConnectedPuyo(x, y);
 
                 if (connectedInfoList.length < Config.erasePuyoCount) {
-
-                    if (connectedInfoList.length) {
-                        remainingInfoList.push(...connectedInfoList);
-                    }
+                    if (connectedInfoList.length) remainingInfoList.push(...connectedInfoList);
                 } else {
-                    if (connectedInfoList.length) {
-                        Stage.erasingInfoList.push(...connectedInfoList);
-                        erasePuyoColorBin[connectedInfoList[0].puyoInfo.puyoColor] = true;
-                    }
+                    Stage.erasingInfoList.push(...connectedInfoList);
+                    erasePuyoColorBin[connectedInfoList[0].puyoInfo.puyoColor] = true;
+
+                    connectBonusSum += connectBonusTable(connectedInfoList.length);
                 }
             }
         }
 
         Stage.puyoCount -= Stage.erasingInfoList.length;
-
         for (const info of remainingInfoList) {
             Stage.setPuyoInfo(info.x, info.y, info.puyoInfo);
         }
@@ -218,7 +220,8 @@ class Stage {
         if (Stage.erasingInfoList.length) {
             return {
                 piece: Stage.erasingInfoList.length,
-                color: Object.keys(erasePuyoColorBin).length
+                color: Object.keys(erasePuyoColorBin).length,
+                connectBonus: connectBonusSum,
             };
         }
         return null;

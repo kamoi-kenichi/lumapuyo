@@ -9,11 +9,17 @@ let lastTimeMs = 0;
 let comboCount = 0;
 let zenkeshiStartFrame = 0;
 let zenkeshiHidden = false;
+let score = 0;
 
 function initialize() {
   GameImage.initialize();
   Stage.initialize();
   Player.initialize();
+
+  GameImage.prepareScoreUI();
+  score = 0;
+  GameImage.setScore(score);
+
   gameState = "start";
   frame = 0;
 }
@@ -33,6 +39,18 @@ function loop(nowMs) {
   const frameInt = Math.floor(frame);
   gameStep(frameInt, dtSec);
   requestAnimationFrame(loop);
+}
+
+function chainBonus(chain) {
+  if (chain <= 1) return 0;
+  const table = [0, 0, 8, 16, 32, 64, 96, 128, 160, 192];
+  if (chain <= 10) return table[chain - 1];
+  return 192 + (chain - 10) * 32;
+}
+
+function colorBonus(colors) {
+  const table = { 1: 0, 2: 3, 3: 6, 4: 12, 5: 24 };
+  return table[colors] ?? 0;
 }
 
 function gameStep(frameInt, dtSec) {
@@ -62,8 +80,19 @@ function gameStep(frameInt, dtSec) {
       if (eraseInfo) {
         gameState = "erasingPuyo";
         comboCount++;
+
+        const chain = comboCount;
+        let bonus = chainBonus(chain) + eraseInfo.connectBonus + colorBonus(eraseInfo.color);
+        if (bonus === 0) bonus = 1;
+
+        score += 10 * eraseInfo.piece * bonus;
+        GameImage.setScore(score);
       } else {
         if (Stage.puyoCount === 0 && comboCount > 0) {
+
+          score += 3600;
+          GameImage.setScore(score);
+
           Stage.dimBackground();
           Stage.showZenkeshi();
           zenkeshiStartFrame = frameInt;
@@ -146,7 +175,7 @@ function gameStep(frameInt, dtSec) {
 
     case "batankyuIntro":
       if (GameImage.updateBatankyuIntro()) {
-        GameImage.phaseStartFrame = frame; 
+        GameImage.phaseStartFrame = frame;
         gameState = "batankyuShake";
       }
       break;
@@ -166,3 +195,4 @@ function gameStep(frameInt, dtSec) {
       break;
   }
 }
+

@@ -6,6 +6,9 @@ class GameImage {
     static promptEl = null;
     static gameOverStartFrame = 0;
     static phaseStartFrame = 0;
+    static scoreEl = null;
+    static scoreDigits = [];
+    static scoreValue = 0;
 
     static initialize() {
 
@@ -29,6 +32,7 @@ class GameImage {
 
     static getPuyoImage(color) {
         const image = GameImage.puyoImageList[color - 1].cloneNode(true);
+        image.classList.add("puyo");
         return image;
     }
 
@@ -108,6 +112,7 @@ class GameImage {
         GameImage.promptEl.style.opacity = "0";
     }
 
+
     static updateGameOverFade() {
         const t = (frame - GameImage.phaseStartFrame) / Config.gameOverFadeFrames;
         const ratio = Math.min(1, Math.max(0, t));
@@ -123,5 +128,38 @@ class GameImage {
     static updateRetryPromptBlink() {
         const a = 0.85 + 0.15 * Math.sin((frame - GameImage.phaseStartFrame) * 0.2);
         GameImage.promptEl.style.opacity = String(a);
+    }
+
+    static prepareScoreUI() {
+        if (GameImage.scoreEl) return;
+
+        const host = document.getElementById("score"); 
+        host.innerHTML = "";
+
+        const el = document.createElement("div");
+        el.className = "score";
+        host.appendChild(el);
+
+        GameImage.scoreEl = el;
+        GameImage.scoreDigits = [];
+
+        for (let i = 0; i < 8; i++) {
+            const img = document.createElement("img");
+            img.className = "scoreDigit";
+            img.src = "img/0.png";
+            el.appendChild(img);
+            GameImage.scoreDigits.push(img);
+        }
+    }
+
+
+    static setScore(v) {
+        GameImage.scoreValue = Math.max(0, Math.floor(v));
+        GameImage.prepareScoreUI();
+
+        const s = String(GameImage.scoreValue).padStart(8, "0").slice(-8);
+        for (let i = 0; i < 8; i++) {
+            GameImage.scoreDigits[i].src = `img/${s[i]}.png`;
+        }
     }
 }
