@@ -16,7 +16,22 @@ body {
     align-items: center;
     justify-content: center;
     padding: 40px 22px;
-    transform: translateY(clamp(-32px, -3vh, -12px));
+    transform: translateY(clamp(-32px, -3vh, -12px)) translateY(8px);
+    opacity: 0;
+    animation: fadeInTitle 900ms cubic-bezier(.22, 1, .36, 1) forwards;
+    animation-delay: 200ms;
+}
+
+@keyframes fadeInTitle {
+    0% {
+        opacity: 0;
+        transform: translateY(clamp(-32px, -3vh, -12px)) translateY(12px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(clamp(-32px, -3vh, -12px)) translateY(0);
+    }
 }
 
 .logo {
@@ -27,6 +42,7 @@ body {
     display: inline-block;
     overflow: hidden;
     border-radius: 14px;
+    animation-delay: 0.2s;
 }
 
 .logo span {
@@ -81,6 +97,7 @@ body {
     font: 700 16px/1.2 system-ui, "Noto Sans JP";
     letter-spacing: 0.18em;
     color: rgba(58, 58, 58, .72);
+    animation-delay: 0.35s;
 }
 
 .startBtn {
@@ -95,6 +112,7 @@ body {
     cursor: pointer;
     box-shadow: 0 16px 40px rgba(0, 0, 0, .16);
     transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+    animation-delay: 0.5s;
 }
 
 .startBtn:hover {
