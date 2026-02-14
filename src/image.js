@@ -264,7 +264,12 @@ class GameImage {
     static animateNext(nextQueue) {
         GameImage.prepareNextUI();
 
+        const SHIFT_MS = 190;
+        const BOUNCE_MS = 120;
+
         const container = GameImage.nextEl;
+        if (container.classList.contains("animating")) return;
+
         const boxEls = Array.from(container.querySelectorAll(".box"));
         const box0 = boxEls[0];
         const box1 = boxEls[1];
@@ -281,7 +286,10 @@ class GameImage {
             b.style.opacity = "1";
         }
         void container.offsetWidth;
-        for (const b of boxEls) b.style.transition = "";
+        for (const b of boxEls) {
+            b.style.transition = `transform ${SHIFT_MS}ms cubic-bezier(.22,1,.36,1),
+                        opacity ${SHIFT_MS}ms cubic-bezier(.22,1,.36,1)`;
+        }
 
         requestAnimationFrame(() => {
             box1.style.transform = `translateY(${-shift}px)`;
@@ -307,14 +315,14 @@ class GameImage {
             box1.style.transition = "";
 
             requestAnimationFrame(() => {
-                box1.style.transform = "translateY(0)";
+                box1.style.transform = "translateY(0) scale(1.03)";
                 box1.style.opacity = "1";
             });
 
             setTimeout(() => {
+                box1.style.transform = "translateY(0) scale(1)";
                 container.classList.remove("animating");
-            }, 190);
-
-        }, 190);
+            }, BOUNCE_MS);
+        }, SHIFT_MS);
     }
 }
