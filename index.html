@@ -12,14 +12,19 @@
     <script src="src/game.js"></script>
 
     <style>
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             margin: 0;
-            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             padding-top: 24px;
-            background: #fff;
+            background: #fafafa;
         }
 
         .gameFrame {
@@ -143,12 +148,45 @@
             display: flex;
             gap: 2px;
         }
+
+        #stage .scoreFloat {
+            position: absolute;
+            z-index: 120;
+            left: 0;
+            top: 0;
+            transform: translate(-50%, -50%);
+            font: 800 18px/1 system-ui, "Noto Sans JP";
+            letter-spacing: .04em;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow:
+                0 2px 8px rgba(0, 0, 0, .35),
+                0 0 10px rgba(255, 255, 255, .18);
+            pointer-events: none;
+            will-change: transform, opacity;
+            animation: scoreFloatUp 650ms ease-out forwards;
+        }
+
+        @keyframes scoreFloatUp {
+            0% {
+                transform: translate(-50%, -50%) translateY(0) scale(1);
+                opacity: 0;
+            }
+
+            15% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) translateY(-40px) scale(1.05);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="gameFrame">
-        <div id="stage"></div>
+        <div id="stage" tabindex="0"></div>
         <div id="score"></div>
     </div>
 

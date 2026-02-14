@@ -218,10 +218,24 @@ class Stage {
         }
 
         if (Stage.erasingInfoList.length) {
+
+            let sumX = 0;
+            let sumY = 0;
+
+            for (const info of Stage.erasingInfoList) {
+                sumX += info.x;
+                sumY += info.y;
+            }
+
+            const cx = sumX / Stage.erasingInfoList.length;
+            const cy = sumY / Stage.erasingInfoList.length;
+
             return {
                 piece: Stage.erasingInfoList.length,
                 color: Object.keys(erasePuyoColorBin).length,
                 connectBonus: connectBonusSum,
+                centerX: (cx + 0.5) * Config.puyoImageWidth,
+                centerY: (cy + 0.5) * Config.puyoImageHeight
             };
         }
         return null;

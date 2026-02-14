@@ -27,7 +27,7 @@ class GameImage {
         GameImage.batankyuImage = document.getElementById("batankyu");
         GameImage.batankyuImage.width = Config.puyoImageWidth * Config.stageCols;
         GameImage.batankyuImage.style.position = "absolute";
-        GameImage.batankyuImage.style.zIndex = "55";
+        GameImage.batankyuImage.style.zIndex = "105";
     }
 
     static getPuyoImage(color) {
@@ -43,7 +43,7 @@ class GameImage {
             Stage.stageElement.appendChild(GameImage.batankyuImage);
         }
 
-        GameImage.batankyuImage.style.zIndex = "55";
+        GameImage.batankyuImage.style.zIndex = "105";
     }
 
     static updateBatankyuIntro() {
@@ -164,14 +164,31 @@ class GameImage {
         const next = Math.max(0, Math.floor(v));
         const changed = next !== GameImage.scoreValue;
 
-        GameImage.scoreValue = Math.max(0, Math.floor(v));
+        GameImage.scoreValue = next;
         GameImage.prepareScoreUI();
 
         const s = String(GameImage.scoreValue).padStart(8, "0").slice(-8);
         for (let i = 0; i < 8; i++) {
             GameImage.scoreDigits[i].src = `img/${s[i]}.png`;
         }
-        
+
         if (changed) GameImage.popScore();
+    }
+
+    static spawnScoreFloat(text, x, y) {
+        const el = document.createElement("div");
+        el.className = "scoreFloat";
+        el.textContent = text;
+
+        const jitterX = (Math.random() * 20 - 10);
+        const stageW = Config.stageCols * Config.puyoImageWidth;
+
+        const clampedX = Math.min(stageW - 16, Math.max(16, x + jitterX));
+
+        el.style.left = `${clampedX}px`;
+        el.style.top = `${y}px`;
+
+        Stage.stageElement.appendChild(el);
+        el.addEventListener("animationend", () => el.remove(), { once: true });
     }
 }

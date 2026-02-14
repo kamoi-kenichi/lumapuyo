@@ -3,6 +3,8 @@ window.addEventListener("load", () => {
   startLoop();
 });
 
+window.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
+
 let gameState;
 let frame;
 let lastTimeMs = 0;
@@ -10,13 +12,25 @@ let comboCount = 0;
 let zenkeshiStartFrame = 0;
 let zenkeshiHidden = false;
 let score = 0;
+let stageKeyHandlerAttached = false;
+let pendingFloat = null;
 
 function initialize() {
   GameImage.initialize();
   Stage.initialize();
   Player.initialize();
 
-  GameImage.prepareScoreUI();
+  if (!stageKeyHandlerAttached) {
+    Stage.stageElement.addEventListener("keydown", (e) => {
+      const block = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "];
+      if (block.includes(e.key)) e.preventDefault();
+    }, { passive: false });
+
+    stageKeyHandlerAttached = true;
+  }
+
+  Stage.stageElement.focus();
+
   score = 0;
   GameImage.setScore(score);
 
@@ -85,10 +99,21 @@ function gameStep(frameInt, dtSec) {
         let bonus = chainBonus(chain) + eraseInfo.connectBonus + colorBonus(eraseInfo.color);
         if (bonus === 0) bonus = 1;
 
-        score += 10 * eraseInfo.piece * bonus;
+        const add = 10 * eraseInfo.piece * bonus;
+        score += add;
         GameImage.setScore(score);
+
+        if (eraseInfo.centerX != null && eraseInfo.centerY != null) {
+          pendingFloat = { text: `+${add}`, x: eraseInfo.centerX, y: eraseInfo.centerY };
+        }
+
       } else {
         if (Stage.puyoCount === 0 && comboCount > 0) {
+
+          GameImage.spawnScoreFloat("+3600",
+            (Config.stageCols * Config.puyoImageWidth) / 2,
+            Config.puyoImageHeight * 2
+          );
 
           score += 3600;
           GameImage.setScore(score);
@@ -108,6 +133,10 @@ function gameStep(frameInt, dtSec) {
 
     case "erasingPuyo":
       if (!Stage.erasePuyo(frameInt)) {
+        if (pendingFloat) {
+          GameImage.spawnScoreFloat(pendingFloat.text, pendingFloat.x, pendingFloat.y);
+          pendingFloat = null;
+        }
         gameState = "checkFallingPuyo";
       }
       break;
