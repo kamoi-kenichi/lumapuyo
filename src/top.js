@@ -1,62 +1,61 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const startBtn = document.getElementById("startBtn");
-    const howBtn = document.getElementById("howBtn");
-    const title = document.getElementById("titleScreen");
+  const startBtn = document.getElementById("startBtn");
+  const howBtn = document.getElementById("howBtn");
+  const title = document.getElementById("titleScreen");
+  const modal = document.getElementById("howModal");
 
-    const modal = document.getElementById("howModal");
-    let isStarting = false;
+  let isStarting = false;
 
-    const startGame = () => {
-        if (isStarting) return;
-        isStarting = true;
+  const openModal = () => {
+    if (isStarting) return;
+    if (!modal) return;
 
-        document.querySelector(".logo")?.classList.add("pause");
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("isModalOpen");
+    document.body.style.overflow = "hidden";
+  };
 
-        startBtn && (startBtn.disabled = true);
-        howBtn && (howBtn.disabled = true);
+  const closeModal = () => {
+    if (!modal) return;
 
-        if (modal?.classList.contains("is-open")) {
-            modal.classList.remove("is-open");
-            modal.setAttribute("aria-hidden", "true");
-            document.body.classList.remove("isModalOpen");
-            document.body.style.overflow = "";
-        }
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("isModalOpen");
+    document.body.style.overflow = "";
+  };
 
-        title?.classList.add("is-zooming");
+  howBtn?.addEventListener("click", openModal);
 
-        window.setTimeout(() => {
-            window.location.href = "game.html";
-        }, 620);
-    };
+  modal?.addEventListener("click", (e) => {
+    if (e.target.matches("[data-close]")) closeModal();
+  });
 
-    startBtn?.addEventListener("click", startGame);
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal?.classList.contains("is-open")) closeModal();
+  });
 
-    if (howBtn && modal) {
-        const openModal = () => {
+  const startGame = () => {
+    if (isStarting) return;
+    isStarting = true;
 
-            if (isStarting) return;
+    document.querySelector(".logo")?.classList.add("pause");
 
-            modal.classList.add("is-open");
-            modal.setAttribute("aria-hidden", "false");
-            document.body.classList.add("isModalOpen");
-            document.body.style.overflow = "hidden";
-        };
+    startBtn && (startBtn.disabled = true);
+    howBtn && (howBtn.disabled = true);
 
-        const closeModal = () => {
-            modal.classList.remove("is-open");
-            modal.setAttribute("aria-hidden", "true");
-            document.body.classList.remove("isModalOpen");
-            document.body.style.overflow = "";
-        };
+    if (modal?.classList.contains("is-open")) closeModal();
 
-        howBtn.addEventListener("click", openModal);
+    title?.classList.add("is-zooming");
 
-        modal.addEventListener("click", (e) => {
-            if (e.target.matches("[data-close]")) closeModal();
-        });
+    window.setTimeout(() => {
+      title?.classList.add("is-leaving");
+    }, 180);
 
-        window.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
-        });
-    }
+    window.setTimeout(() => {
+      window.location.href = "game.html";
+    }, 760);
+  };
+
+  startBtn?.addEventListener("click", startGame);
 });

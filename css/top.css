@@ -7,7 +7,7 @@ body {
     isolation: isolate;
     display: grid;
     place-items: center;
-    background: #faf8f4;
+    background: #0c0807;
     overflow: hidden;
     min-height: 100svh;
     transform-origin: 50% 45%;
@@ -64,12 +64,14 @@ body {
         radial-gradient(2px 2px at 58% 86%, rgba(90, 157, 245, .18), transparent 62%),
         radial-gradient(2px 2px at 82% 82%, rgba(164, 74, 203, .18), transparent 62%);
 
-    filter: blur(.2px);
-    opacity: var(--p-opacity, .70);
+    filter:
+        drop-shadow(0 0 10px rgba(255, 255, 255, .22)) drop-shadow(0 0 18px rgba(90, 157, 245, .14)) drop-shadow(0 0 18px rgba(164, 74, 203, .12));
+    opacity: var(--p-opacity, .72);
 
     animation:
         particles 9s ease-in-out infinite,
-        twinkle 2.8s ease-in-out infinite;
+        twinkle 1.6s steps(2, end) infinite;
+
     will-change: transform;
 }
 
@@ -330,17 +332,26 @@ body {
     width: min(260px, 70vw);
     height: 48px;
     border-radius: 999px;
-    border: 2px solid rgba(90, 157, 245, .35);
-    background: transparent;
-    color: rgba(58, 58, 58, .75);
+
+    border: 1px solid rgba(160, 190, 255, .55);
+    background: rgba(255, 255, 255, .06);
+
+    color: rgba(255, 255, 255, .82);
+
     font: 700 14px/1 system-ui, "Noto Sans JP";
     letter-spacing: .18em;
     cursor: pointer;
+
+    box-shadow:
+        0 10px 26px rgba(0, 0, 0, .35),
+        inset 0 1px 0 rgba(255, 255, 255, .10);
+
     transition:
         background .25s ease,
         color .25s ease,
         border-color .25s ease,
-        transform .12s ease;
+        transform .12s ease,
+        box-shadow .25s ease;
 }
 
 .howBtn::before {
@@ -366,16 +377,24 @@ body {
 }
 
 .howBtn:hover {
-    background: rgba(90, 157, 245, .08);
-    border-color: rgba(90, 157, 245, .6);
-    color: #3a3a3a;
+    background: rgba(255, 255, 255, .10);
+    border-color: rgba(160, 190, 255, .80);
+    color: rgba(255, 255, 255, .92);
     transform: translateY(-1px);
+    box-shadow:
+        0 14px 32px rgba(0, 0, 0, .45),
+        inset 0 1px 0 rgba(255, 255, 255, .14);
 }
 
 .howBtn:hover::before {
     opacity: 1;
     animation: howShine 850ms cubic-bezier(.22, 1, .36, 1) 1;
     animation-fill-mode: both;
+}
+
+.howBtn:active {
+    transform: translateY(1px);
+    background: rgba(255, 255, 255, .08);
 }
 
 @keyframes howShine {
@@ -543,6 +562,7 @@ body.isModalOpen #titleScreen {
 .titleScreen.is-zooming {
     transform: scale(1.08);
     --p-opacity: .95;
+    --p2-opacity: .75;
 }
 
 .titleScreen.is-zooming .titleInner {
@@ -599,8 +619,9 @@ body.isModalOpen #titleScreen {
     z-index: 0;
     pointer-events: none;
     mix-blend-mode: screen;
-    opacity: var(--p2-opacity, .40);
-    filter: blur(1.2px);
+    opacity: var(--p2-opacity, .55);
+    filter:
+        blur(1.2px) drop-shadow(0 0 22px rgba(255, 255, 255, .20)) drop-shadow(0 0 26px rgba(90, 157, 245, .16)) drop-shadow(0 0 26px rgba(164, 74, 203, .14));
 
     background:
         radial-gradient(10px 10px at 20% 35%, rgba(255, 255, 255, .22), transparent 60%),
@@ -608,8 +629,22 @@ body.isModalOpen #titleScreen {
         radial-gradient(14px 14px at 45% 72%, rgba(164, 74, 203, .16), transparent 62%),
         radial-gradient(9px 9px at 82% 28%, rgba(255, 255, 255, .18), transparent 60%);
 
-    animation: particles2 11s ease-in-out infinite;
+    animation:
+        particles2 11s ease-in-out infinite,
+        twinkle2 2.2s steps(2, end) infinite;
     will-change: transform;
+}
+
+@keyframes twinkle2 {
+
+    0%,
+    100% {
+        opacity: var(--p2-opacity, .55);
+    }
+
+    50% {
+        opacity: calc(var(--p2-opacity, .55) + .10);
+    }
 }
 
 @keyframes particles2 {
