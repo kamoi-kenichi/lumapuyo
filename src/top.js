@@ -1,8 +1,20 @@
-document.getElementById("startBtn").addEventListener("click", () => {
+document.addEventListener("DOMContentLoaded", () => {
+  const startBtn = document.getElementById("startBtn");
+  const howBtn = document.getElementById("howBtn");
+  const t = document.getElementById("titleScreen");
+
+  startBtn?.addEventListener("click", () => {
     document.querySelector(".logo")?.classList.add("pause");
-    const t = document.getElementById("titleScreen");
-    t.classList.add("is-leaving");
-    setTimeout(() => window.location.href = "game.html", 420);
+
+    startBtn.disabled = true;
+    howBtn.disabled = true;
+
+    t.classList.add("is-zooming");
+
+    setTimeout(() => {
+      window.location.href = "game.html";
+    }, 620);
+  });
 });
 
 document.addEventListener("DOMContentLoaded", () => {
