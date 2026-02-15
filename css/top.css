@@ -53,17 +53,24 @@ body {
     mix-blend-mode: screen;
 
     background:
-        radial-gradient(3px 3px at 18% 42%, rgba(255, 255, 255, .70), transparent 62%),
-        radial-gradient(3px 3px at 72% 35%, rgba(164, 74, 203, .22), transparent 62%),
-        radial-gradient(4px 4px at 40% 70%, rgba(90, 157, 245, .20), transparent 62%),
-        radial-gradient(3px 3px at 85% 75%, rgba(255, 255, 255, .60), transparent 62%),
-        radial-gradient(4px 4px at 60% 18%, rgba(164, 74, 203, .16), transparent 62%);
+        radial-gradient(2px 2px at 12% 22%, rgba(255, 255, 255, .85), transparent 62%),
+        radial-gradient(2px 2px at 24% 58%, rgba(164, 74, 203, .28), transparent 62%),
+        radial-gradient(2px 2px at 36% 40%, rgba(90, 157, 245, .26), transparent 62%),
+        radial-gradient(2px 2px at 48% 70%, rgba(255, 255, 255, .78), transparent 62%),
+        radial-gradient(2px 2px at 62% 18%, rgba(164, 74, 203, .22), transparent 62%),
+        radial-gradient(2px 2px at 74% 52%, rgba(90, 157, 245, .22), transparent 62%),
+        radial-gradient(2px 2px at 86% 30%, rgba(255, 255, 255, .70), transparent 62%),
+        radial-gradient(2px 2px at 18% 78%, rgba(255, 255, 255, .65), transparent 62%),
+        radial-gradient(2px 2px at 58% 86%, rgba(90, 157, 245, .18), transparent 62%),
+        radial-gradient(2px 2px at 82% 82%, rgba(164, 74, 203, .18), transparent 62%);
 
-    filter: blur(0px);
-    opacity: var(--p-opacity, .68);
+    filter: blur(.2px);
+    opacity: var(--p-opacity, .70);
 
-    animation: particles 10s ease-in-out infinite;
-    will-change: transform, opacity;
+    animation:
+        particles 9s ease-in-out infinite,
+        twinkle 2.8s ease-in-out infinite;
+    will-change: transform;
 }
 
 @keyframes particles {
@@ -75,6 +82,18 @@ body {
 
     50% {
         transform: translate3d(12px, -10px, 0);
+    }
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        filter: blur(.2px) brightness(1) contrast(1);
+    }
+
+    50% {
+        filter: blur(.15px) brightness(1.18) contrast(1.08);
     }
 }
 
@@ -531,6 +550,23 @@ body.isModalOpen #titleScreen {
     opacity: 0.2;
 }
 
+.titleScreen.is-zooming .sparkLayer {
+    animation: particlesCollect2 520ms cubic-bezier(.22, 1, .36, 1) forwards;
+    opacity: .7;
+}
+
+@keyframes particlesCollect2 {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1);
+        filter: blur(1.2px);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) scale(.2);
+        filter: blur(2.2px);
+    }
+}
+
 @keyframes particlesCollect {
     0% {
         transform: translate3d(0, 0, 0) scale(1);
@@ -554,6 +590,37 @@ body.isModalOpen #titleScreen {
     100% {
         transform: translate3d(0, 0, 0) scale(1.10);
         opacity: .75;
+    }
+}
+
+.sparkLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    opacity: var(--p2-opacity, .40);
+    filter: blur(1.2px);
+
+    background:
+        radial-gradient(10px 10px at 20% 35%, rgba(255, 255, 255, .22), transparent 60%),
+        radial-gradient(12px 12px at 70% 55%, rgba(90, 157, 245, .18), transparent 62%),
+        radial-gradient(14px 14px at 45% 72%, rgba(164, 74, 203, .16), transparent 62%),
+        radial-gradient(9px 9px at 82% 28%, rgba(255, 255, 255, .18), transparent 60%);
+
+    animation: particles2 11s ease-in-out infinite;
+    will-change: transform;
+}
+
+@keyframes particles2 {
+
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    50% {
+        transform: translate3d(-10px, 8px, 0);
     }
 }
 
