@@ -32,20 +32,29 @@
 
             <div class="modal__content">
                 <ol class="howList">
-                    <li>左右で移動（PC：← →）</li>
-                    <li>上で左回転、Zで右回転（PC：↑ / Z）</li>
-                    <li>同じ色を4つ以上つなげると消える</li>
-                    <li>連鎖するとスコアUP！</li>
-                    <li>詰まったら R でリトライ / T でタイトル画面に戻る</li>
+                    <li class="pcOnly">← →：移動</li>
+                    <li class="pcOnly">↑：左回転</li>
+                    <li class="pcOnly">Z：右回転</li>
+                    <li class="pcOnly">↓：落下加速</li>
+                    <li class="pcOnly">同じ色を4つ以上つなげると消える</li>
+                    <li class="pcOnly">連鎖するとスコアUP！</li>
+                    <li class="pcOnly">詰まったら R でリトライ / T でタイトル画面に戻る</li>
                 </ol>
-                <p class="howNote">※スマホ操作</p>
-            </div>
+                <div class="howNote">
+                    <div class="howNote__title">スマホ操作</div>
+                    <div class="howNote__body">
+                        左右スワイプ = 移動<br>
+                        下スワイプ = 落下加速<br>
+                        タップ = 回転<br>
+                        長押し = 連続落下
+                    </div>
+                </div>
 
-            <div class="modal__actions">
-                <button class="modal__btn" type="button" data-close>OK</button>
+                <div class="modal__actions">
+                    <button class="modal__btn" type="button" data-close>OK</button>
+                </div>
             </div>
         </div>
-    </div>
 
 </body>
 

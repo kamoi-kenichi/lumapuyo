@@ -52,18 +52,6 @@ body {
     pointer-events: none;
     mix-blend-mode: screen;
 
-    background:
-        radial-gradient(2px 2px at 12% 22%, rgba(255, 255, 255, .85), transparent 62%),
-        radial-gradient(2px 2px at 24% 58%, rgba(164, 74, 203, .28), transparent 62%),
-        radial-gradient(2px 2px at 36% 40%, rgba(90, 157, 245, .26), transparent 62%),
-        radial-gradient(2px 2px at 48% 70%, rgba(255, 255, 255, .78), transparent 62%),
-        radial-gradient(2px 2px at 62% 18%, rgba(164, 74, 203, .22), transparent 62%),
-        radial-gradient(2px 2px at 74% 52%, rgba(90, 157, 245, .22), transparent 62%),
-        radial-gradient(2px 2px at 86% 30%, rgba(255, 255, 255, .70), transparent 62%),
-        radial-gradient(2px 2px at 18% 78%, rgba(255, 255, 255, .65), transparent 62%),
-        radial-gradient(2px 2px at 58% 86%, rgba(90, 157, 245, .18), transparent 62%),
-        radial-gradient(2px 2px at 82% 82%, rgba(164, 74, 203, .18), transparent 62%);
-
     filter:
         drop-shadow(0 0 10px rgba(255, 255, 255, .22)) drop-shadow(0 0 18px rgba(90, 157, 245, .14)) drop-shadow(0 0 18px rgba(164, 74, 203, .12));
     opacity: var(--p-opacity, .72);
@@ -233,7 +221,6 @@ body {
         background-position: -180% 0;
     }
 }
-
 
 .subtitle {
     margin: 14px 0 26px;
@@ -496,6 +483,14 @@ body {
 
 .modal__content {
     padding: 10px 12px 6px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: .25s ease;
+}
+
+.modal.is-open .modal__content {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .howList {
@@ -507,9 +502,26 @@ body {
 
 .howNote {
     margin: 10px 0 0;
-    color: rgba(58, 58, 58, .55);
-    font: 600 12px/1.6 system-ui, "Noto Sans JP";
     text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.howNote__title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .10em;
+    color: rgba(58, 58, 58, .70);
+}
+
+.howNote__body {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: rgba(58, 58, 58, .55);
+    line-height: 1.7;
 }
 
 .modal__actions {
@@ -643,14 +655,13 @@ body.isModalOpen #titleScreen {
     pointer-events: none;
     mix-blend-mode: screen;
     opacity: var(--p2-opacity, .55);
-    filter:
-        blur(1.2px) drop-shadow(0 0 22px rgba(255, 255, 255, .20)) drop-shadow(0 0 26px rgba(90, 157, 245, .16)) drop-shadow(0 0 26px rgba(164, 74, 203, .14));
+    filter: blur(1.6px) drop-shadow(0 0 26px rgba(255, 255, 255, .22)) drop-shadow(0 0 30px rgba(90, 157, 245, .18)) drop-shadow(0 0 30px rgba(164, 74, 203, .16));
 
     background:
-        radial-gradient(10px 10px at 20% 35%, rgba(255, 255, 255, .22), transparent 60%),
-        radial-gradient(12px 12px at 70% 55%, rgba(90, 157, 245, .18), transparent 62%),
-        radial-gradient(14px 14px at 45% 72%, rgba(164, 74, 203, .16), transparent 62%),
-        radial-gradient(9px 9px at 82% 28%, rgba(255, 255, 255, .18), transparent 60%);
+        radial-gradient(22px 22px at 18% 30%, rgba(255, 255, 255, .18), transparent 62%),
+        radial-gradient(26px 26px at 72% 56%, rgba(90, 157, 245, .16), transparent 64%),
+        radial-gradient(30px 30px at 45% 76%, rgba(164, 74, 203, .14), transparent 66%),
+        radial-gradient(18px 18px at 84% 26%, rgba(255, 255, 255, .14), transparent 62%);
 
     animation:
         particles2 11s ease-in-out infinite,
@@ -726,5 +737,27 @@ body.isModalOpen #titleScreen {
     .titleScreen.is-zooming::before,
     .titleScreen.is-zooming::after {
         animation: none;
+    }
+}
+
+@media (pointer: fine) {
+    .howNote {
+        opacity: .75;
+    }
+}
+
+@media (pointer: coarse) {
+    .pcOnly {
+        display: none;
+    }
+
+    .modal__content {
+        padding: 6px 12px 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sparkLayer {
+        filter: blur(2px) drop-shadow(0 0 32px rgba(255, 255, 255, .22)) drop-shadow(0 0 34px rgba(90, 157, 245, .18)) drop-shadow(0 0 34px rgba(164, 74, 203, .16));
     }
 }
