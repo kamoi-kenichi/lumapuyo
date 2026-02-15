@@ -1,25 +1,8 @@
 document.getElementById("startBtn").addEventListener("click", () => {
     document.querySelector(".logo")?.classList.add("pause");
-
-    const screen = document.getElementById("titleScreen");
-    const startBtn = document.getElementById("startBtn");
-    const howBtn = document.getElementById("howBtn");
-
-    startBtn.disabled = true;
-    howBtn.disabled = true;
-    startBtn.style.pointerEvents = "none";
-    howBtn.style.pointerEvents = "none";
-
-    screen.classList.add("is-zooming");
-
-    screen.style.transition = "opacity 260ms ease";
-    setTimeout(() => {
-        screen.style.opacity = "0";
-    }, 320);
-
-    setTimeout(() => {
-        window.location.href = "game.html";
-    }, 620);
+    const t = document.getElementById("titleScreen");
+    t.classList.add("is-leaving");
+    setTimeout(() => window.location.href = "game.html", 420);
 });
 
 document.addEventListener("DOMContentLoaded", () => {
