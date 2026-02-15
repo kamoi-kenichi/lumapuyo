@@ -8,8 +8,9 @@
     <script src="src/config.js"></script>
     <script src="src/image.js"></script>
     <script src="src/stage.js"></script>
-    <script src="src/player.js"></script>    
-    <script src="src/touch.js"></script>    
+    <script src="src/player.js"></script>
+    <script src="src/touch.js"></script>
+    <script src="src/effects.js"></script>
     <script src="src/game.js"></script>
     <link rel="stylesheet" href="css/game.css" />
 </head>
@@ -17,7 +18,11 @@
 <body>
     <div class="gameFrame">
         <div class="playRow">
-            <div id="stage" tabindex="0"></div>
+            <div class="stageWrap">
+                <div id="stage" tabindex="0"></div>
+                <div id="uiLayer" aria-hidden="true"></div>
+            </div>
+
             <div id="next"></div>
         </div>
         <div id="score"></div>

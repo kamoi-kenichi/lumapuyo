@@ -276,3 +276,59 @@ body {
     color: rgba(255, 255, 255, .92);
     backdrop-filter: blur(6px);
 }
+
+.stageWrap {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+}
+
+#uiLayer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 200;
+}
+
+.chainPop {
+    position: absolute;
+    left: 50%;
+    top: 35%;
+    transform: translate(-50%, -50%);
+    font: 900 34px/1.0 system-ui, "Noto Sans JP";
+    letter-spacing: .06em;
+    color: rgba(255, 255, 255, .96);
+    text-shadow: 0 8px 20px rgba(0, 0, 0, .35);
+    filter: drop-shadow(0 0 16px rgba(90, 157, 245, .35));
+    animation: chainPop 720ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.chainPop small {
+    display: block;
+    margin-top: 6px;
+    font: 800 14px/1.0 system-ui, "Noto Sans JP";
+    opacity: .85;
+    letter-spacing: .18em;
+}
+
+@keyframes chainPop {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(.65);
+    }
+
+    30% {
+        opacity: 1;
+        transform: translate(-50%, -56%) scale(1.15);
+    }
+
+    55% {
+        opacity: 1;
+        transform: translate(-50%, -52%) scale(1.0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -62%) scale(.98);
+    }
+}

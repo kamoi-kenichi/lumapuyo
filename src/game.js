@@ -1,6 +1,11 @@
 window.addEventListener("load", () => {
   initialize();
   startLoop();
+
+  for (let i = 1; i <= 5; i++) {
+    Sound.preload(`chain${i}`, `assets/sfx/chain${i}.mp3`);
+  }
+  Sound.preload("allclear", "assets/sfx/allclear.mp3");
 });
 
 let gameState;
@@ -12,6 +17,7 @@ let zenkeshiHidden = false;
 let score = 0;
 let stageKeyHandlerAttached = false;
 let pendingFloat = null;
+let soundUnlockAttached = false;
 
 function initialize() {
   GameImage.initialize();
@@ -31,6 +37,12 @@ function initialize() {
     }, { passive: false });
 
     stageKeyHandlerAttached = true;
+  }
+
+  if (!soundUnlockAttached) {
+    Stage.stageElement.addEventListener("pointerdown", () => Sound.unlock(), { once: true });
+    Stage.stageElement.addEventListener("keydown", () => Sound.unlock(), { once: true });
+    soundUnlockAttached = true;
   }
 
   Stage.stageElement.focus();
@@ -103,6 +115,13 @@ function gameStep(frameInt, dtSec) {
         gameState = "erasingPuyo";
         comboCount++;
 
+        if (typeof Effects !== "undefined") {
+          Effects.showChain(comboCount);
+        }
+        if (typeof Sound !== "undefined") {
+          Sound.playChain(comboCount);
+        }
+
         const chain = comboCount;
         let bonus = chainBonus(chain) + eraseInfo.connectBonus + colorBonus(eraseInfo.color);
         if (bonus === 0) bonus = 1;
@@ -118,6 +137,11 @@ function gameStep(frameInt, dtSec) {
       } else {
         if (Stage.puyoCount === 0 && comboCount > 0) {
 
+          Sound.play("allclear", 0.9);
+
+          Stage.dimBackground();
+          Stage.showZenkeshi();
+
           GameImage.spawnScoreFloat("+3600",
             (Config.stageCols * Config.puyoImageWidth) / 2,
             Config.puyoImageHeight * 2
@@ -126,8 +150,6 @@ function gameStep(frameInt, dtSec) {
           score += 3600;
           GameImage.setScore(score);
 
-          Stage.dimBackground();
-          Stage.showZenkeshi();
           zenkeshiStartFrame = frameInt;
           zenkeshiHidden = false;
           gameState = "zenkeshi";
