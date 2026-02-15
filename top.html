@@ -20,6 +20,32 @@
             <button class="howBtn" id="howBtn">HOW TO PLAY</button>
         </div>
     </div>
+
+    <div class="modal" id="howModal" aria-hidden="true">
+        <div class="modal__backdrop" data-close></div>
+
+        <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="howTitle">
+            <button class="modal__close" type="button" aria-label="閉じる" data-close>×</button>
+
+            <h2 class="modal__title" id="howTitle">HOW TO PLAY</h2>
+
+            <div class="modal__content">
+                <ol class="howList">
+                    <li>左右で移動（PC：← →）</li>
+                    <li>上で左回転、Zで右回転（PC：↑ / Z）</li>
+                    <li>同じ色を4つ以上つなげると消える</li>
+                    <li>連鎖するとスコアUP！</li>
+                    <li>詰まったら R でリトライ / T でタイトル画面に戻る</li>
+                </ol>
+                <p class="howNote">※スマホ操作</p>
+            </div>
+
+            <div class="modal__actions">
+                <button class="modal__btn" type="button" data-close>OK</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>
