@@ -365,6 +365,28 @@ class Player {
 
         return true;
     }
+
+    static pulseKey(key, ms = 40) {
+
+        Player.keyStatus[key] = true;
+        setTimeout(() => { Player.keyStatus[key] = false; }, ms);
+    }
+
+    static moveOnceLeft() { Player.pulseKey("left"); }
+    static moveOnceRight() { Player.pulseKey("right"); }
+
+    static rotateOnceCW() { Player.pulseKey("rotateCW"); }
+    static rotateOnceCCW() { Player.pulseKey("rotateCCW"); }
+
+    static setDown(isDown) {
+        Player.keyStatus.down = !!isDown;
+    }
+
+    static quickDrop(ms = 140) {
+
+        Player.keyStatus.down = true;
+        setTimeout(() => { Player.keyStatus.down = false; }, ms);
+    }
 }
 
 

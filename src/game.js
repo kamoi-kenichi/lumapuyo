@@ -3,8 +3,6 @@ window.addEventListener("load", () => {
   startLoop();
 });
 
-window.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
-
 let gameState;
 let frame;
 let lastTimeMs = 0;
@@ -19,6 +17,10 @@ function initialize() {
   GameImage.initialize();
   Stage.initialize();
   Player.initialize();
+
+  if (typeof TouchInput !== "undefined") {
+    TouchInput.install(Stage.stageElement);
+  }
 
   if (!stageKeyHandlerAttached) {
     Stage.stageElement.addEventListener("keydown", (e) => {
