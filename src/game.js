@@ -18,6 +18,8 @@ function initialize() {
   Stage.initialize();
   Player.initialize();
 
+  if (GameImage.removeRetryButtons) GameImage.removeRetryButtons();
+
   if (typeof TouchInput !== "undefined") {
     TouchInput.install(Stage.stageElement);
   }
@@ -55,6 +57,10 @@ function loop(nowMs) {
   const frameInt = Math.floor(frame);
   gameStep(frameInt, dtSec);
   requestAnimationFrame(loop);
+}
+
+function isTouchDevice() {
+  return window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
 }
 
 function chainBonus(chain) {
@@ -223,7 +229,7 @@ function gameStep(frameInt, dtSec) {
       GameImage.updateRetryPromptBlink();
 
       if (Player.isTitlePressed()) {
-        window.location.href = "top.html";
+        window.location.href = "index.html";
         break;
       }
 

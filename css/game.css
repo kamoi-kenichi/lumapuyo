@@ -232,3 +232,47 @@ body {
         transform: scale(1);
     }
 }
+
+#stage .retryUI {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .22s ease, transform .22s ease;
+    z-index: 120;
+    pointer-events: none;
+}
+
+#stage .retryUI.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+#stage .retryUI button {
+    -webkit-tap-highlight-color: transparent;
+    border: none;
+    border-radius: 999px;
+    height: 44px;
+    padding: 0 16px;
+    font: 800 13px/1 system-ui, "Noto Sans JP";
+    letter-spacing: .14em;
+    color: rgba(255, 255, 255, .96);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .25);
+}
+
+#stage .retryUI .retryBtn {
+    background: linear-gradient(90deg, rgba(164, 74, 203, .92), rgba(90, 157, 245, .92));
+}
+
+#stage .retryUI .titleBtn {
+    background: rgba(255, 255, 255, .14);
+    border: 1px solid rgba(255, 255, 255, .35);
+    color: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(6px);
+}

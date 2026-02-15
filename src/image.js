@@ -1,4 +1,8 @@
 class GameImage {
+    static retryUIEl = null;
+    static retryBtn = null;
+    static titleBtn = null;
+
     static puyoImageList = null;
     static batankyuImage = null;
     static gameOverFrame = 0;
@@ -146,13 +150,23 @@ class GameImage {
         if (!GameImage.promptEl) {
             const el = document.createElement("div");
             el.className = "prompt";
-            el.textContent = "Press R to Retry / T to Title";
             Stage.stageElement.appendChild(el);
             GameImage.promptEl = el;
         }
-        GameImage.promptEl.style.opacity = "0";
-    }
 
+        const touch = (window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window);
+
+        if (!touch) {
+
+            GameImage.promptEl.textContent = "R でリトライ / T でタイトル";
+            GameImage.promptEl.style.opacity = "0";
+            GameImage.removeRetryButtons();
+            return;
+        }
+
+        GameImage.promptEl.style.opacity = "0";
+        GameImage.createRetryButtons();
+    }
 
     static updateGameOverFade() {
         const t = (frame - GameImage.phaseStartFrame) / Config.gameOverFadeFrames;
@@ -163,7 +177,15 @@ class GameImage {
 
     static showRetryPrompt() {
         GameImage.phaseStartFrame = frame;
-        GameImage.promptEl.style.opacity = "1";
+
+        const touch = (window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window);
+
+        if (!touch) {
+            GameImage.promptEl.style.opacity = "1";
+        } else {
+           
+            if (GameImage.retryUIEl) GameImage.retryUIEl.classList.add("show");
+        }
     }
 
     static updateRetryPromptBlink() {
@@ -324,5 +346,47 @@ class GameImage {
                 container.classList.remove("animating");
             }, BOUNCE_MS);
         }, SHIFT_MS);
+    }
+
+    static createRetryButtons() {
+        if (GameImage.retryUIEl) return;
+
+        const wrap = document.createElement("div");
+        wrap.className = "retryUI";
+
+        const retry = document.createElement("button");
+        retry.className = "retryBtn";
+        retry.type = "button";
+        retry.textContent = "リトライ";
+
+        const title = document.createElement("button");
+        title.className = "titleBtn";
+        title.type = "button";
+        title.textContent = "タイトル画面";
+
+        retry.addEventListener("click", () => {
+            Player.retryPressed = true;
+        });
+
+        title.addEventListener("click", () => {
+            Player.titlePressed = true;
+        });
+
+        wrap.appendChild(retry);
+        wrap.appendChild(title);
+
+        Stage.stageElement.appendChild(wrap);
+
+        GameImage.retryUIEl = wrap;
+        GameImage.retryBtn = retry;
+        GameImage.titleBtn = title;
+    }
+
+    static removeRetryButtons() {
+        if (!GameImage.retryUIEl) return;
+        GameImage.retryUIEl.remove();
+        GameImage.retryUIEl = null;
+        GameImage.retryBtn = null;
+        GameImage.titleBtn = null;
     }
 }
