@@ -247,9 +247,9 @@ This project intentionally avoids frameworks.
 ## 🚀 Challenges & Improvements
 
 🔧 Challenges
-Implementing chain detection logic
-Synchronizing animation and game state
-Optimizing input handling
+- Implementing chain detection logic
+- Synchronizing animation and game state
+- Optimizing input handling
 
 ## 🚀 工夫点・今後の改善
 
@@ -278,9 +278,9 @@ Optimizing input handling
 
 ## 📦 Installation
 
-git clone https://github.com/kamoi-kenichi/lumapuyo
-cd lumapuyo
-open index.html
+- git clone https://github.com/kamoi-kenichi/lumapuyo
+- cd lumapuyo
+- open index.html
 
 ---
 
@@ -296,8 +296,8 @@ Puyo Puyo clone, Vanilla JavaScript, game development portfolio
 Kenichi Kamoi
 Creative Engineer (Web / Java)
 
-🌐 Portfolio: https://kenichikamoi.com
-🐙 GitHub: https://github.com/kamoi-kenichi
+- 🌐 Portfolio: https://kenichikamoi.com
+- 🐙 GitHub: https://github.com/kamoi-kenichi
 
 ## 👤 作者
 
