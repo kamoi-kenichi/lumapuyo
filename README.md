@@ -53,15 +53,15 @@ and demonstrates how emotion can be designed through interaction.
 
 ## ✨ Demo
 
-[![Lumapuyo Gameplay](docs/thumbnail.png)](docs/lumapuyo.mp4)
+[![Lumapuyo Gameplay](docs/thumbnail.png)](https://kenichikamoi.com/apps/game/lumapuyo/)
 
-🎥 Click to watch gameplay video
+👉 Click to play the game
 
 ## ✨ デモ
 
-[![Lumapuyo プレイ動画](docs/thumbnail.png)](docs/lumapuyo.mp4)
+[![Lumapuyo プレイ動画](docs/thumbnail.png)](https://kenichikamoi.com/apps/game/lumapuyo/)
 
-🎥 クリックで動画を再生できます
+👉 クリックでゲームをプレイできます
 
 ---
 
@@ -116,7 +116,6 @@ This project is built around the idea of:
 - Separation of logic and rendering  
 - Board state managed independently from DOM  
 
-```js
 Stage.puyoBoard[y][x] = {
   puyoColor,
   element
