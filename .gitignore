@@ -1,0 +1,50 @@
+# Lumapuyo - team development ready
+
+# =========================
+# OS generated files
+# =========================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# =========================
+# Editor / IDE settings
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# =========================
+# Temporary / cache files
+# =========================
+*.tmp
+*.temp
+*.cache
+*.bak
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Node.js
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+
+# =========================
+# Build output (if used)
+# =========================
+dist/
+build/

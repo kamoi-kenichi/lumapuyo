@@ -17,7 +17,6 @@ class Effects {
         el.addEventListener("animationend", () => el.remove(), { once: true });
     }
 }
-
 class Sound {
     static unlocked = false;
     static pool = new Map();
